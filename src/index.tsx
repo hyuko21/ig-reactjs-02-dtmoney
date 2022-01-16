@@ -48,8 +48,8 @@ createServer({
 
     this.post('transactions', async (schema, request) => {
       const data = JSON.parse(request.requestBody)
-      schema.create('transaction', data)
-      return data
+      const result = schema.create('transaction', data)
+      return result
     })
   }
 })

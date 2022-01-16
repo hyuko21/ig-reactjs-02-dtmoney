@@ -6,3 +6,5 @@ type Transaction = {
   category: string
   createdAt: Date
 }
+
+type AddTransactionInput = Omit<Transaction, 'id' | 'createdAt'>

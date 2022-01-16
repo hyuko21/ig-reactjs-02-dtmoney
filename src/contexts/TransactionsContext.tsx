@@ -1,13 +1,14 @@
 import { createContext, ReactNode, useEffect, useState } from 'react'
 import { api } from '../services/api'
 
-type ITransactionsContext = {
+type TransactionsContextValue = {
   transactions: Transaction[]
+  addTransaction: (transaction: AddTransactionInput) => Promise<void>
 }
 
-export const TransactionsContext = createContext<ITransactionsContext>({
-  transactions: []
-})
+export const TransactionsContext = createContext<TransactionsContextValue>(
+  {} as TransactionsContextValue
+)
 
 type TransactionsProviderProps = {
   children: ReactNode
@@ -21,8 +22,19 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
       .then(({ data }) => setTransactions(data?.transactions || []))
   }, [])
 
+  async function addTransaction(transactionInput: AddTransactionInput) {
+    const { data: { transaction } } = await api.post('transactions', {
+      ...transactionInput,
+      createdAt: new Date()
+    })
+    setTransactions([
+      ...transactions,
+      transaction
+    ])
+  }
+
   return (
-    <TransactionsContext.Provider value={{ transactions }}>
+    <TransactionsContext.Provider value={{ addTransaction, transactions }}>
       {children}
     </TransactionsContext.Provider>
   )

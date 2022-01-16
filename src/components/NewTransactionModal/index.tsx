@@ -1,3 +1,4 @@
+import { FormEvent, useState } from 'react'
 import Modal from 'react-modal'
 import incomeImg from '../../assets/income.svg'
 import outcomeImg from '../../assets/outcome.svg'
@@ -7,7 +8,6 @@ import {
   TransactionTypeContainer,
   TransactionTypeButton
 } from './styles'
-import { useState } from 'react'
 
 type NewTransactionModalProps = {
   isOpen: boolean
@@ -15,7 +15,24 @@ type NewTransactionModalProps = {
 }
 
 export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionModalProps) {
-  const [type, setType] = useState('income')
+  const [formValues, setFormValues] = useState({
+    title: '',
+    amount: 0,
+    type: 'income',
+    category: ''
+  })
+
+  function updateFormValues<
+    T extends typeof formValues,
+    K extends keyof T
+  >(field: K, value: T[K]) {
+    setFormValues((prev) => ({ ...prev, [field]: value }))
+  }
+
+  function handleCreateNewTransaction(event: FormEvent) {
+    event.preventDefault()
+    console.log(formValues)
+  }
 
   return (
     <Modal
@@ -31,15 +48,25 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
       >
         <img src={closeImg} alt='Close modal' />
       </button>
-      <Container>
+      <Container onSubmit={handleCreateNewTransaction}>
         <h2>New Transaction</h2>
-        <input type='text' placeholder='Title' />
-        <input type='number' placeholder='Amount' />
+        <input
+          type='text'
+          placeholder='Title'
+          value={formValues.title}
+          onChange={(event) => updateFormValues('title', event.target.value)}
+        />
+        <input
+          type='number'
+          placeholder='Amount'
+          value={formValues.amount}
+          onChange={(event) => updateFormValues('amount', Number(event.target.value))}
+        />
         <TransactionTypeContainer>
           <TransactionTypeButton
             type='button'
-            onClick={() => setType('income')}
-            isActive={type === 'income'}
+            onClick={() => updateFormValues('type', 'income')}
+            isActive={formValues.type === 'income'}
             activeColor='green'
           >
             <img src={incomeImg} alt='Income' />
@@ -47,15 +74,20 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
           </TransactionTypeButton>
           <TransactionTypeButton
             type='button'
-            onClick={() => setType('outcome')}
-            isActive={type === 'outcome'}
+            onClick={() => updateFormValues('type', 'outcome')}
+            isActive={formValues.type === 'outcome'}
             activeColor='red'
           >
             <img src={outcomeImg} alt='Outcome' />
             <span>Outcome</span>
           </TransactionTypeButton>
         </TransactionTypeContainer>
-        <input type='text' placeholder='Category' />
+        <input
+          type='text'
+          placeholder='Category'
+          value={formValues.category}
+          onChange={(event) => updateFormValues('category', event.target.value)}
+        />
         <button type='submit'>Submit</button>
       </Container>
     </Modal>

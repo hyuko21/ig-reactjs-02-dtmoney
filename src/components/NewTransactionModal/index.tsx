@@ -8,6 +8,7 @@ import {
   TransactionTypeContainer,
   TransactionTypeButton
 } from './styles'
+import { api } from '../../services/api'
 
 type NewTransactionModalProps = {
   isOpen: boolean
@@ -31,7 +32,7 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
 
   function handleCreateNewTransaction(event: FormEvent) {
     event.preventDefault()
-    console.log(formValues)
+    api.post('transactions', formValues)
   }
 
   return (

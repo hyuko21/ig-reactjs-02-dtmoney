@@ -5,7 +5,7 @@ import { api } from '../../services/api'
 export function TransactionList() {
   useEffect(() => {
     api.get('transactions')
-      .then((response) => console.log(response.data))
+      .then((response) => console.log(response.data?.transactions))
   })
 
   return (

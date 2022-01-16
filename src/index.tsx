@@ -30,7 +30,7 @@ createServer({
         {
           id: 3,
           title: 'Aluguel',
-          amount: 900,
+          amount: 1500,
           type: 'outcome',
           category: 'Casa',
           createdAt: new Date('2022-01-01T12:00:00')
